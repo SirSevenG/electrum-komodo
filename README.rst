@@ -15,8 +15,6 @@ Electrum-Komodo - Lightweight Komodo client
 
 
 
-
-
 Getting started
 ===============
 
