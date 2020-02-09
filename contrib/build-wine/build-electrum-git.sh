@@ -18,7 +18,7 @@ set -e
 
 mkdir -p tmp
 cd tmp
-if [$2]
+if [ ! -z "$2" ]
     then
         URL=https://github.com/$2.git
     else
@@ -28,7 +28,7 @@ if [$2]
 if [ -d electrum-komodo ]; then
     cd electrum-komodo
     git pull
-    if [ $1 ]
+    if [ ! -z "$1" ]
         then
             git checkout $1
         else
