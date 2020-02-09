@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Lucky number
 export PYTHONHASHSEED=22
