@@ -137,6 +137,9 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
+          echo ${GITHUB_REF#refs/heads/}
+          echo ${{ github.base_ref }}
+          echo ${{ github.base_ref#refs/heads/ }}
           sudo apt-get remove php7.1-fpm php7.2-fpm php7.3-fpm php7.4-fpm php7.3-common php7.4-common
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get upgrade -y
@@ -150,22 +153,30 @@ jobs:
                   sudo apt-get update && \
                   sudo apt-get install wine32-development -y
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: Build (Wine)
+      - name: Build (Wine) [on push]
+        if:  github.event_name == 'push'
         run: |
+          echo ${GITHUB_REF#refs/heads/
           cd contrib/build-wine
-          sudo ./build.sh ${{ steps.extract_branch.outputs.branch }}
+          sudo ./build.sh ${GITHUB_REF#refs/heads/}
+          cd ../..
+          zip electrum-komodo-installer contrib/build-wine/dist/*.exe
+
+      - name: Build (Wine) [on pr]
+        if:  github.event_name == 'pull_request'
+        run: |
+          echo ${GITHUB_REF#refs/heads/}
+          echo ${{ github.base_ref }}
+          echo ${{ github.base_ref#refs/heads/ }}
+          cd contrib/build-wine
+          sudo ./build.sh ${{ github.base_ref }}  
           cd ../..
           zip electrum-komodo-installer contrib/build-wine/dist/*.exe
 
       - name: Upload electrum-setup.exe as artifact
         uses: actions/upload-artifact@v1
         with:
-          name: electrum-komodo-setup-${{ github.sha }}.zip
+          name: electrum-komodo-win-${{ github.sha }}.zip
           path: ./electrum-komodo-installer.zip
 
   win-test:
