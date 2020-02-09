@@ -18,6 +18,12 @@ set -e
 
 mkdir -p tmp
 cd tmp
+if [$2]
+    then
+        URL=https://github.com/$2.git
+    else
+        URL=https://github.com/komodoplatform/electrum-komodo.git
+    fi
 
 if [ -d electrum-komodo ]; then
     cd electrum-komodo
@@ -30,12 +36,18 @@ if [ -d electrum-komodo ]; then
         fi
     cd ..
     else
-    URL=https://github.com/komodoplatform/electrum-komodo.git
+    echo $URL
     if [ $1 ]
         then
-            git clone -b $1 $URL electrum-komodo
+            git clone $URL electrum-komodo
+	    cd electrum-komodo
+	    git checkout --force $1
+	    cd ..
         else
-            git clone -b master $URL electrum-komodo
+            git clone $URL electrum-komodo
+	    cd electrum-komodo
+	    git checkout master
+	    cd ..
         fi
     fi
 
