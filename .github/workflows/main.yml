@@ -139,7 +139,7 @@ jobs:
         run: |
           echo ${GITHUB_REF#refs/heads/}
           echo ${{ github.base_ref }}
-          echo ${{ github.base_ref#refs/heads/ }}
+          echo ${${{ github.base_ref}} #refs/heads/}
           sudo apt-get remove php7.1-fpm php7.2-fpm php7.3-fpm php7.4-fpm php7.3-common php7.4-common
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get upgrade -y
@@ -156,7 +156,6 @@ jobs:
       - name: Build (Wine) [on push]
         if:  github.event_name == 'push'
         run: |
-          echo ${GITHUB_REF#refs/heads/
           cd contrib/build-wine
           sudo ./build.sh ${GITHUB_REF#refs/heads/}
           cd ../..
@@ -165,9 +164,6 @@ jobs:
       - name: Build (Wine) [on pr]
         if:  github.event_name == 'pull_request'
         run: |
-          echo ${GITHUB_REF#refs/heads/}
-          echo ${{ github.base_ref }}
-          echo ${{ github.base_ref#refs/heads/ }}
           cd contrib/build-wine
           sudo ./build.sh ${{ github.base_ref }}  
           cd ../..
