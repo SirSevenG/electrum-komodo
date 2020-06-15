@@ -159,7 +159,7 @@ jobs:
                   sudo apt-get install wine32-development -y
 
       - name: Build (Wine) [on push]
-        if:  github.event_name == 'push'
+        if:  github.event_name == 'push' || github.event_name == 'schedule'
         run: |
           echo ${GITHUB_REF#refs/heads/}
           echo ${{ github.repository }}
